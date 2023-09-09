@@ -1,10 +1,22 @@
-import 'dart:async';
+import 'dart:convert';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:temperatur_app/mobile_design_widget.dart';
+import 'package:temperatur_app/temp_model.dart';
 import 'package:temperatur_app/theme.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -31,53 +43,52 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String? temp;
+  int? temp;
   String? status;
   Color? colorStatus;
+  late DatabaseReference dbRef;
+  List<dynamic> dataList = [];
+  TempModel? tempModel;
 
   @override
   void initState() {
     getInit();
-
     super.initState();
   }
 
   getInit() async {
-    for (var i = 1; i < 4; i++) {
-      await Future.delayed(const Duration(seconds: 2))
-          .then((value) => getTemp(i));
-    }
+    dbRef = FirebaseDatabase.instance.ref().child('sensorsuhu');
+    // final DataSnapshot snapShot = await dbRef.get();
+    dbRef.onValue.listen((DatabaseEvent event) {
+      Map<String, dynamic> data = jsonDecode(jsonEncode(event.snapshot.value));
+      tempModel = TempModel.fromJson(data);
+      getTemp(tempModel!.temperature!);
+      print(tempModel!.temperature!);
+    });
   }
 
-  getTemp(var i) {
-    switch (i) {
-      case 1:
+  getTemp(int value) {
+    switch (value) {
+      case >= 30 && <= 35:
         setState(() {
-          temp = '33';
+          temp = value;
           status = 'Normal';
           colorStatus = cardColor1;
         });
 
         break;
-      case 2:
+      case >= 36 && <= 37:
         setState(() {
-          temp = '36.5';
+          temp = value;
           status = 'Dalam Pantauan';
           colorStatus = cardColor2;
         });
         break;
-      case 3:
+      case >= 38:
         setState(() {
-          temp = '40';
+          temp = value;
           status = 'Segera ambil tindakan';
           colorStatus = cardColor3;
-        });
-        break;
-      default:
-        setState(() {
-          temp = '33';
-          status = 'Normal';
-          colorStatus = cardColor1;
         });
     }
   }
@@ -88,17 +99,17 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Scaffold(
           backgroundColor: backgroundColor,
           body: Container(
-            margin:
-                const EdgeInsets.only(top: 39, right: 7, left: 7, bottom: 31),
+            margin: EdgeInsets.only(
+                top: 39, right: defaultMargin, left: defaultMargin, bottom: 31),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                   width: double.infinity,
                   child: Text(
-                    'Monitoring Suhu Tubuh',
+                    'SENSOR SUHU BADAN',
                     style: primaryTextStyle.copyWith(
-                        fontWeight: semiBold, fontSize: large),
+                        fontWeight: bold, fontSize: extralarge),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -107,47 +118,69 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(large),
+                  padding: EdgeInsets.all(defaultMargin),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
-                      color: backgroundColor2),
+                      color: cardColor),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Temperature',
+                        'SUHU',
                         style: primaryTextStyle.copyWith(
-                          fontSize: extralarge,
-                        ),
+                            fontSize: extralarge, fontWeight: bold),
                       ),
-                      const SizedBox(
-                        height: 34,
+                      SizedBox(
+                        height: small,
                       ),
                       Text(
-                        '${temp ?? '33'}  °C',
+                        '$temp°C',
                         style: primaryTextStyle.copyWith(
-                          fontSize: 50,
-                          fontWeight: bold,
-                        ),
+                            fontSize: 60, fontWeight: bold, color: colorStatus),
                       ),
-                      const SizedBox(
-                        height: 34,
+                      SizedBox(
+                        height: small,
                       ),
-                      Container(
-                        width: double.infinity,
-                        height: 63,
-                        decoration:
-                            BoxDecoration(color: colorStatus ?? cardColor1),
-                      )
                     ],
                   ),
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 22, vertical: 21),
-                  child: Text(
-                    'Keterangan : ${status ?? 'Normal'}',
-                  ),
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(
+                      horizontal: defaultMargin * 2, vertical: defaultMargin),
+                  height: 63,
+                  decoration: BoxDecoration(
+                      color: colorStatus ?? cardColor1,
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+                SizedBox(
+                  height: extralarge * 5,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'STATUS :',
+                      style: primaryTextStyle.copyWith(
+                          fontSize: large, fontWeight: bold),
+                    ),
+                    SizedBox(
+                      height: extraSmall,
+                    ),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 22, vertical: 21),
+                      decoration: BoxDecoration(
+                        color: statusColor,
+                      ),
+                      child: Text(
+                        '${status?.toUpperCase()}',
+                        style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
                 )
               ],
             ),

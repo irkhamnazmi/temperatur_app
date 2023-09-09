@@ -1,0 +1,32 @@
+{
+    "project_info": {
+        "project_number": "793458036158",
+        "firebase_url": "https://sensor-suhu-49d8b-default-rtdb.firebaseio.com",
+        "project_id": "sensor-suhu-49d8b",
+        "storage_bucket": "sensor-suhu-49d8b.appspot.com"
+    },
+    "client": [{
+        "client_info": {
+            "mobilesdk_app_id": "1:793458036158:android:de14302a4cd727b3cffdef",
+            "android_client_info": {
+                "package_name": "com.example.temperatur_app"
+            }
+        },
+        "oauth_client": [{
+            "client_id": "793458036158-lr87av3ca5l2unq42rqa3vbs12kkpaav.apps.googleusercontent.com",
+            "client_type": 3
+        }],
+        "api_key": [{
+            "current_key": "AIzaSyBu2x-Crizg-nHs6lY7fAs3lNTdW5CYH_4"
+        }],
+        "services": {
+            "appinvite_service": {
+                "other_platform_oauth_client": [{
+                    "client_id": "793458036158-lr87av3ca5l2unq42rqa3vbs12kkpaav.apps.googleusercontent.com",
+                    "client_type": 3
+                }]
+            }
+        }
+    }],
+    "configuration_version": "1"
+}
