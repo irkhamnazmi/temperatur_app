@@ -42,8 +42,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int? temp;
-  String? status;
+  int temp = 0;
+  String? status = '';
   Color? colorStatus;
   late DatabaseReference dbRef;
   List<dynamic> dataList = [];
@@ -52,6 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     getInit();
+
     super.initState();
   }
 
@@ -61,32 +62,34 @@ class _MyHomePageState extends State<MyHomePage> {
     dbRef.onValue.listen((DatabaseEvent event) {
       Map<String, dynamic> data = jsonDecode(jsonEncode(event.snapshot.value));
       tempModel = TempModel.fromJson(data);
+    });
+    Future.delayed(const Duration(seconds: 1)).then((val) {
       getTemp(tempModel!.temperature!);
     });
   }
 
   getTemp(int value) {
     switch (value) {
-      case >= 30 && <= 35:
+      case <= 35:
         setState(() {
-          temp = value;
           status = 'Normal';
           colorStatus = cardColor1;
+          temp = value;
         });
 
         break;
       case >= 36 && <= 37:
         setState(() {
-          temp = value;
           status = 'Dalam Pantauan';
           colorStatus = cardColor2;
+          temp = value;
         });
         break;
       case >= 38:
         setState(() {
-          temp = value;
           status = 'Segera ambil tindakan';
           colorStatus = cardColor3;
+          temp = value;
         });
     }
   }
@@ -171,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: statusColor,
                     ),
                     child: Text(
-                      '${status?.toUpperCase()}',
+                      status!.toUpperCase(),
                       style: primaryTextStyle.copyWith(fontWeight: semiBold),
                       textAlign: TextAlign.center,
                     ),
