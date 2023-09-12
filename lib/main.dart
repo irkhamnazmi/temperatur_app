@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
-import 'package:temperatur_app/mobile_design_widget.dart';
 import 'package:temperatur_app/temp_model.dart';
 import 'package:temperatur_app/theme.dart';
 
@@ -63,7 +62,6 @@ class _MyHomePageState extends State<MyHomePage> {
       Map<String, dynamic> data = jsonDecode(jsonEncode(event.snapshot.value));
       tempModel = TempModel.fromJson(data);
       getTemp(tempModel!.temperature!);
-      print(tempModel!.temperature!);
     });
   }
 
@@ -95,96 +93,93 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return MobileDesignWidget(
-      child: Scaffold(
-          backgroundColor: backgroundColor,
-          body: Container(
-            margin: EdgeInsets.only(
-                top: 39, right: defaultMargin, left: defaultMargin, bottom: 31),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    'SENSOR SUHU BADAN',
-                    style: primaryTextStyle.copyWith(
-                        fontWeight: bold, fontSize: extralarge),
-                    textAlign: TextAlign.center,
-                  ),
+    return Scaffold(
+        backgroundColor: backgroundColor,
+        body: Container(
+          margin: EdgeInsets.only(
+              top: 39, right: defaultMargin, left: defaultMargin, bottom: 31),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: Text(
+                  'SENSOR SUHU BADAN',
+                  style: primaryTextStyle.copyWith(
+                      fontWeight: bold, fontSize: extralarge),
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(
-                  height: 21,
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(defaultMargin),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(25),
-                      color: cardColor),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'SUHU',
-                        style: primaryTextStyle.copyWith(
-                            fontSize: extralarge, fontWeight: bold),
-                      ),
-                      SizedBox(
-                        height: small,
-                      ),
-                      Text(
-                        '$temp°C',
-                        style: primaryTextStyle.copyWith(
-                            fontSize: 60, fontWeight: bold, color: colorStatus),
-                      ),
-                      SizedBox(
-                        height: small,
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.symmetric(
-                      horizontal: defaultMargin * 2, vertical: defaultMargin),
-                  height: 63,
-                  decoration: BoxDecoration(
-                      color: colorStatus ?? cardColor1,
-                      borderRadius: BorderRadius.circular(10)),
-                ),
-                SizedBox(
-                  height: extralarge * 5,
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              ),
+              const SizedBox(
+                height: 21,
+              ),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(defaultMargin),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25), color: cardColor),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'STATUS :',
+                      'SUHU',
                       style: primaryTextStyle.copyWith(
-                          fontSize: large, fontWeight: bold),
+                          fontSize: extralarge, fontWeight: bold),
                     ),
                     SizedBox(
-                      height: extraSmall,
+                      height: small,
                     ),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 22, vertical: 21),
-                      decoration: BoxDecoration(
-                        color: statusColor,
-                      ),
-                      child: Text(
-                        '${status?.toUpperCase()}',
-                        style: primaryTextStyle.copyWith(fontWeight: semiBold),
-                        textAlign: TextAlign.center,
-                      ),
+                    Text(
+                      '$temp°C',
+                      style: primaryTextStyle.copyWith(
+                          fontSize: 60, fontWeight: bold, color: colorStatus),
+                    ),
+                    SizedBox(
+                      height: small,
                     ),
                   ],
-                )
-              ],
-            ),
-          )),
-    );
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                margin: EdgeInsets.symmetric(
+                    horizontal: defaultMargin * 2, vertical: defaultMargin),
+                height: 63,
+                decoration: BoxDecoration(
+                    color: colorStatus ?? cardColor1,
+                    borderRadius: BorderRadius.circular(10)),
+              ),
+              SizedBox(
+                height: extralarge * 5,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'STATUS :',
+                    style: primaryTextStyle.copyWith(
+                        fontSize: large, fontWeight: bold),
+                  ),
+                  SizedBox(
+                    height: extraSmall,
+                  ),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 22, vertical: 21),
+                    decoration: BoxDecoration(
+                      color: statusColor,
+                    ),
+                    child: Text(
+                      '${status?.toUpperCase()}',
+                      style: primaryTextStyle.copyWith(fontWeight: semiBold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ));
   }
 }
