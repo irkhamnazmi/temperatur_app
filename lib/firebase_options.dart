@@ -50,11 +50,10 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyBy-0S4RT_aQzX5UrXME4YTQuw3QOcICe0',
     appId: '1:1022961610984:web:cfab483af6e342dcc7995d',
     messagingSenderId: '1022961610984',
-    projectId: 'suhu-50490',
-    authDomain: 'suhu-50490.firebaseapp.com',
-    databaseURL:
-        'https://suhu-50490-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'suhu-50490.appspot.com',
+    projectId: 'sensor-suhu-49d8b.appspot.com',
+    // authDomain: 'suhu-50490.firebaseapp.com',
+    databaseURL: 'https://sensor-suhu-49d8b-default-rtdb.firebaseio.com',
+    storageBucket: 'sensor-suhu-49d8b.appspot.com',
     measurementId: 'G-5LZB5B6KJK',
   );
 
@@ -71,10 +70,9 @@ class DefaultFirebaseOptions {
     apiKey: 'AIzaSyAX-TEPgSkHTBw1JNpuMnFKXXhVRIZNB7k',
     appId: '1:1022961610984:ios:c19357e714e5fccdc7995d',
     messagingSenderId: '1022961610984',
-    projectId: 'suhu-50490',
-    databaseURL:
-        'https://suhu-50490-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'suhu-50490.appspot.com',
+    projectId: 'sensor-suhu-49d8b',
+    databaseURL: 'https://sensor-suhu-49d8b-default-rtdb.firebaseio.com',
+    storageBucket: 'sensor-suhu-49d8b.appspot.com',
     iosClientId:
         '1022961610984-arc9od51chauot42n8maepj0mt7ten9d.apps.googleusercontent.com',
     iosBundleId: 'com.example.temperaturApp',
