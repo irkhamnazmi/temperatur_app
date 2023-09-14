@@ -42,15 +42,16 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int temp = 0;
-  String? status = '';
+  double? temp;
+  String? status;
   Color? colorStatus;
   late DatabaseReference dbRef;
-  List<dynamic> dataList = [];
   TempModel? tempModel;
+  bool? isLoading;
 
   @override
   void initState() {
+    isLoading = true;
     getInit();
 
     super.initState();
@@ -63,12 +64,15 @@ class _MyHomePageState extends State<MyHomePage> {
       Map<String, dynamic> data = jsonDecode(jsonEncode(event.snapshot.value));
       tempModel = TempModel.fromJson(data);
     });
-    Future.delayed(const Duration(seconds: 1)).then((val) {
+
+    Future.delayed(const Duration(seconds: 2)).then((val) {
+      isLoading = false;
       getTemp(tempModel!.temperature!);
+      // print(tempModel!.temperature);
     });
   }
 
-  getTemp(int value) {
+  getTemp(double value) {
     switch (value) {
       case <= 35:
         setState(() {
@@ -133,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       height: small,
                     ),
                     Text(
-                      '$temp°C',
+                      isLoading == false ? '$temp°C' : '...',
                       style: primaryTextStyle.copyWith(
                           fontSize: 60, fontWeight: bold, color: colorStatus),
                     ),
@@ -174,7 +178,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: statusColor,
                     ),
                     child: Text(
-                      status!.toUpperCase(),
+                      isLoading == false ? status!.toUpperCase() : '...',
                       style: primaryTextStyle.copyWith(fontWeight: semiBold),
                       textAlign: TextAlign.center,
                     ),

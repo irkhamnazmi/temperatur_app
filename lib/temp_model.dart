@@ -1,6 +1,6 @@
 class TempModel {
-  int? temperature;
-  int? humidity;
+  double? temperature;
+  double? humidity;
 
   TempModel({this.temperature, this.humidity});
 
