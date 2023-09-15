@@ -40,8 +40,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  double? temp;
+class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
+  String? temp;
   String? status;
   Color? colorStatus;
   late DatabaseReference dbRef;
@@ -50,48 +50,67 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    getInit();
+    isLoading = true;
+    fetch();
+    WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
-  getInit() async {
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      fetch();
+    }
+  }
+
+  fetch() async {
     dbRef = FirebaseDatabase.instance.ref().child('sensorsuhu');
     // final DataSnapshot snapShot = await dbRef.get();
     dbRef.onValue.listen((DatabaseEvent event) {
       Map<String, dynamic> data = jsonDecode(jsonEncode(event.snapshot.value));
       tempModel = TempModel.fromJson(data);
-      Future.delayed(const Duration(seconds: 1)).then((val) {
+      Future.delayed(const Duration(milliseconds: 500)).then((val) {
         getTemp(tempModel!.temperature!);
-        // print(tempModel!.temperature);
+        isLoading = false;
       });
     });
   }
 
-  getTemp(double value) {
-    switch (value) {
-      case <= 35:
+  getTemp(String value) {
+    print(value);
+    switch (double.parse(value)) {
+      case <= 37.5:
         setState(() {
           status = 'Normal';
           colorStatus = cardColor1;
-          temp = value;
-          isLoading = false;
+          temp = value.contains('.')
+              ? double.parse(value).toString()
+              : int.parse(value).toString();
         });
 
         break;
-      case >= 36 && <= 37:
+      case >= 37.6 && <= 38.5:
         setState(() {
           status = 'Dalam Pantauan';
           colorStatus = cardColor2;
-          temp = value;
-          isLoading = false;
+          temp = value.contains('.')
+              ? double.parse(value).toString()
+              : int.parse(value).toString();
         });
         break;
-      case >= 38:
+      case >= 38.6:
         setState(() {
           status = 'Segera ambil tindakan';
           colorStatus = cardColor3;
-          temp = value;
-          isLoading = false;
+          temp = value.contains('.')
+              ? double.parse(value).toString()
+              : int.parse(value).toString();
         });
     }
   }
@@ -151,7 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     horizontal: defaultMargin * 2, vertical: defaultMargin),
                 height: 63,
                 decoration: BoxDecoration(
-                    color: colorStatus ?? cardColor1,
+                    color: colorStatus,
                     borderRadius: BorderRadius.circular(10)),
               ),
               SizedBox(

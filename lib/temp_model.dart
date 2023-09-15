@@ -1,12 +1,12 @@
 class TempModel {
-  double? temperature;
-  double? humidity;
+  String? temperature;
+  String? humidity;
 
   TempModel({this.temperature, this.humidity});
 
   TempModel.fromJson(Map<String, dynamic> json) {
-    temperature = json['temperature'];
-    humidity = json['humidity'];
+    temperature = json['temperature'].toString();
+    humidity = json['humidity'].toString();
   }
 
   Map<String, dynamic> toJson() {
