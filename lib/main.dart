@@ -14,7 +14,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  Firebase.initializeApp();
 
   runApp(const MyApp());
 }
@@ -51,9 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   void initState() {
-    isLoading = true;
     getInit();
-
     super.initState();
   }
 
@@ -63,12 +60,10 @@ class _MyHomePageState extends State<MyHomePage> {
     dbRef.onValue.listen((DatabaseEvent event) {
       Map<String, dynamic> data = jsonDecode(jsonEncode(event.snapshot.value));
       tempModel = TempModel.fromJson(data);
-    });
-
-    Future.delayed(const Duration(seconds: 2)).then((val) {
-      isLoading = false;
-      getTemp(tempModel!.temperature!);
-      // print(tempModel!.temperature);
+      Future.delayed(const Duration(seconds: 1)).then((val) {
+        getTemp(tempModel!.temperature!);
+        // print(tempModel!.temperature);
+      });
     });
   }
 
@@ -79,6 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
           status = 'Normal';
           colorStatus = cardColor1;
           temp = value;
+          isLoading = false;
         });
 
         break;
@@ -87,6 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
           status = 'Dalam Pantauan';
           colorStatus = cardColor2;
           temp = value;
+          isLoading = false;
         });
         break;
       case >= 38:
@@ -94,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
           status = 'Segera ambil tindakan';
           colorStatus = cardColor3;
           temp = value;
+          isLoading = false;
         });
     }
   }
